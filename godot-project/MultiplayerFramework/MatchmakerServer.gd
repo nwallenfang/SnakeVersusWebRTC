@@ -30,8 +30,11 @@ func _ready():
 	_server.connect("client_disconnected", self, "_disconnected")
 	_server.connect("client_close_request", self, "_close_request")
 	_server.connect("data_received", self, "_on_data")
+	
+	_server.private_key = load("res://HTTPSKeys/private.key");
+	_server.ssl_certificate = load("res://HTTPSKeys/chain.crt");
 
-	var err = _server.listen(PORT)
+	var err = _server.listen(PORT, PoolStringArray(), true)
 	if err != OK:
 		print("Unable to start server")
 		set_process(false)

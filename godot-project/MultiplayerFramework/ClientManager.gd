@@ -2,7 +2,7 @@ extends Node
 
 class_name ClientManager
 
-export(String) var websocket_url = "godot-server.captain.perons.com.br"
+export(String) var websocket_url = "nilolo.de"
 export(int) var port = 9080
 
 var _rtc : RTC_Client
@@ -28,8 +28,8 @@ func send_data(message : Message):
 		_client.get_peer(1).put_packet(message.get_raw())
 
 func connect_to_server():
-	uri = "ws://" + websocket_url + ":" + str(port)
-	
+	uri = "wss://" + websocket_url + ":" + str(port)
+	print("trying to connect to", uri)
 	players_ready = false
 	_rtc = load("res://MultiplayerFramework/WebRTCClient.tscn").instance()
 	_match = []
@@ -51,7 +51,11 @@ func connect_to_server():
 
 	var err = _client.connect_to_url(uri)
 	if err != OK:
+		print("!!!")
+		print(err)
 		set_process(false)
+	else:
+		print("connection fine")
 
 func rtc_on_peer_connected(id):
 	_rtc_peers[id] = true

@@ -48,6 +48,10 @@ config/name="Snake Versus"
 run/main_scene="res://Main.tscn"
 config/icon="res://Client/Assets/Tiles/tile_0018.png"
 
+[gdnative]
+
+singletons=[ "res://webrtc/webrtc.tres" ]
+
 [rendering]
 
 quality/driver/driver_name="GLES2"
