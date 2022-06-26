@@ -29,7 +29,7 @@ func send_data(message : Message):
 
 func connect_to_server():
 	uri = "wss://" + websocket_url + ":" + str(port)
-	print("trying to connect to", uri)
+	print("trying to connect to ", uri)
 	players_ready = false
 	_rtc = load("res://MultiplayerFramework/WebRTCClient.tscn").instance()
 	_match = []
@@ -54,8 +54,7 @@ func connect_to_server():
 		print("!!!")
 		print(err)
 		set_process(false)
-	else:
-		print("connection fine")
+
 
 func rtc_on_peer_connected(id):
 	_rtc_peers[id] = true
@@ -83,8 +82,10 @@ func _connected(proto = ""):
 	print("Connected to server!")
 
 func _on_data():
+
 	var data = _client.get_peer(1).get_packet()
-	
+	var err_state = _client.get_peer(1).get_packet_error()
+	print("_on_data, err_state: ", err_state)
 	var message = Message.new()
 	message.from_raw(data)
 	
@@ -92,7 +93,7 @@ func _on_data():
 		_id = message.content
 		_initialised = true
 		print("Logged in with id ", _id)
-	if (message.match_start):
+	if (message.match_start) and not message.server_login:
 		_match = message.content as Array
 		_player_number = _match.find(_id)
 		print("Match started as player ", _player_number)

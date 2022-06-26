@@ -20,7 +20,7 @@ func _logger_coroutine():
 		for id in _match_queue:
 			m += str(id) + " "
 
-		printt("Connected:   " + p)
+		printt("Nils3 Connected:   " + p)
 		printt("Match queue: " + m + "\n")
 
 func _ready():
@@ -31,8 +31,14 @@ func _ready():
 	_server.connect("client_close_request", self, "_close_request")
 	_server.connect("data_received", self, "_on_data")
 	
-	_server.private_key = load("res://HTTPSKeys/private.key");
-	_server.ssl_certificate = load("res://HTTPSKeys/chain.crt");
+	var key: CryptoKey = load("res://HTTPSKeys/private.key")
+	var cert: X509Certificate = load("res://HTTPSKeys/certificate.crt")
+#	var chain: X509Certificate = load("res://HTTPSKeys/der_encrypted/chain.crt")
+#	print(key.save_to_string())
+#	print(cert)
+	_server.private_key = key
+	_server.ssl_certificate = cert
+#	_server.ca_chain = chain
 
 	var err = _server.listen(PORT, PoolStringArray(), true)
 	if err != OK:
@@ -85,6 +91,7 @@ func _disconnected(id, was_clean = false):
 	remove_player_from_connections(id)
 
 func _on_data(id):
+	print("got some data from ", id)
 	var message = Message.new()
 	message.from_raw(_server.get_peer(id).get_packet())
 
